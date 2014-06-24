@@ -27,14 +27,9 @@
       html, body {
           height: 100%;
       }
-      .wrapper {
-          min-height: 100%;
-          height: auto !important;
-          height: 100%;
-          margin: 0 auto -25px; /* the bottom margin is the negative value of the footer's height */
-      }
-      .footer, .push {
-          height: 25; /* .push must be the same height as .footer */
+      .disabled {
+        color: #eee;
+        font-weight: bold;
       }
       </style>
       
@@ -90,29 +85,62 @@
       var wheels = [45,45,45,45,35,25,15,10,5,5,2.5,2.5];
       var loads = combine(combinations(wheels,1));
 
-      updatePercentages($('#max').val(),$('#percentage').val(),$('#step').val());  
-      function updatePercentages(max,percentage,step){
+      updatePercentages();  
+      function updatePercentages(filter){
+        var max = $('#max').val(),
+            percentage = $('#percentage').val(),
+            step = $('#step').val();
+
         var percentages = [];
         for(var i=parseInt(percentage);i<=100;i+=parseInt(step)){
           percentages.push((Math.round((max * (i/100))/5)*5));
         }
-        updateLoads(max,parseInt(percentage),percentages,parseInt(step));
+        updateLoads(filter,parseInt(percentage),percentages,parseInt(step));
       }
    
-      function updateLoads(max,percentage,percentages,step){
+      function updateLoads(filter,percentage,percentages,step){
         var html = '';
-        for(var i=0;i<percentages.length;i++){
+        for(var i=percentages.length-1;i>=0;i--){
           var total = percentages[i];
           html += '<div class="row"><div class="panel panel-default"><div class="panel-heading"><h2 class="panel-title">'+(percentage + (step*i))+'%<span class="pull-right badge">'+total+'#</span></div><div class="panel-body">';
-          for(var j=0;j<loads[total].length;j++){
-            html += '<span class="weight">' + loads[total][j]+'</span><br/>';
+          if(filter){
+            var parts = filter.split(/,/);
+
+            var matched = false;
+            while(!matched && parts.length>0){
+              var found = writePanel(loads,total,parts.join());
+              if(found){
+                html += found;
+                matched = true;;
+              }
+              parts.pop();
+            }
+            if(!matched) html += writePanel(loads,total);
+          }else{
+            html += writePanel(loads,total);
           }
           html += '</div></div></div>';
         }
         $("#loads").empty().append(html);
         $("span.weight").click(function(){
-          alert($(this).text());
+          updatePercentages($(this).text()); 
         });
+      }
+
+      function writePanel(loads, total, filter){
+        var re = new RegExp('^'+filter,'g');
+        var html = '';
+
+        var matched = false;
+        for(var j=0;j<loads[total].length;j++){
+          if(!filter || loads[total][j].match(re)){
+            html += '<span class="weight">' + loads[total][j]+'</span><br/>';
+            matched = true;
+          }else{
+            html += '<span class="weight disabled">' + loads[total][j]+'</span><br/>';
+          }
+        }
+        if(matched) return html;
       }
 
       function dedup(a){
