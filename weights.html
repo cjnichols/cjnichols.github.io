@@ -19,35 +19,62 @@
       <!-- Custom Google Web Font -->
       <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
       <link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+
+      <style>
+      * {
+        margin: 0;
+      }
+      html, body {
+          height: 100%;
+      }
+      .wrapper {
+          min-height: 100%;
+          height: auto !important;
+          height: 100%;
+          margin: 0 auto -25px; /* the bottom margin is the negative value of the footer's height */
+      }
+      .footer, .push {
+          height: 25; /* .push must be the same height as .footer */
+      }
+      </style>
       
   </head>
   <body>
-    <div class="container">
-      <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <h3>Enter Weights and Percentages</h3>
-          <form class="form-inline" role="form">
-            <div class="form-group">
-              <label for="inputMax" class="sr-only">One Rep Max</label>
-              <input type="number" class="form-control" id="max" placeholder="One Rep Max" />
+    <div class="wrapper">
+      <div class="container">
+        <div class="row">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <h3>Enter Weights and Percentages</h3>
+              <forzm class="form-inline" role="form">
+                <div class="form-group">
+                  <label for="inputMax" class="sr-only">One Rep Max</label>
+                  <input type="number" class="form-control" id="max" placeholder="One Rep Max" />
+                </div>
+                <div class="form-group">
+                  <label for="inputPercentage" class="sr-only">Starting %</label>
+                    <select class="form-control" id="percentage" placeholder="Starting %"></select>
+                </div>
+                <div class="form-group">
+                  <label for="inputStep" class="sr-only">Step %</label>
+                  <select class="form-control" id="step" placeholder="Step %"></select>
+                </div>
+              </forzm>
             </div>
-            <div class="form-group">
-              <label for="inputPercentage" class="sr-only">Starting %</label>
-                <select class="form-control" id="percentage" placeholder="Starting %"></select>
-            </div>
-            <div class="form-group">
-              <label for="inputStep" class="sr-only">Step %</label>
-              <select class="form-control" id="step" placeholder="Step %"></select>
-            </div>
-          </form>
+          </div>
         </div>
+        <div id="loads"></div>
+      </div>
+      <div class="push"></div>
+    </div>
+    <div id="footer" class="footer">
+      <div class="row">
+        <div id="domtime" class="col-md-6 text-center"></div>
+        <div id="pagetime" class="col-md-6 text-center"></div>
       </div>
     </div>
-    <div id="loads"></div>
-  </div>
+  
 
-    <div id="footer"></div>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script>
       for(var i=0;i<10;i++){
@@ -144,10 +171,10 @@
     </script>
     <script type="text/javascript">
          $(document).ready(function() {
-             $('#footer').append("DOM Ready In ", Date.now()-timerStart, "</br>");
+             $('#domtime').append("DOM Ready In ", Date.now()-timerStart, "</br>");
          });
          $(window).load(function() {
-             $('#footer').append("Page Loaded In ", Date.now()-timerStart);
+             $('#pagetime').append("Page Loaded In ", Date.now()-timerStart);
          });
     </script>
   </body>
